@@ -1,7 +1,10 @@
 var express = require("express");
 var router = express.Router();
-const bcrypt = require("bcrypt");
+const { checkBody } = require("../modules/bodyCheck");
 const Admin = require("../models/admin");
+
+const bcrypt = require("bcrypt");
+const uid2 = require("uid2");
 
 /* GET test auth */
 router.get("/", function (req, res, next) {
@@ -20,10 +23,12 @@ router.post("/register", async (req, res) => {
     const newAdmin = new Admin({
       username: req.body.username,
       password: hashedPassword,
+      token: uid2(32),
       isAdmin: true,
     });
 
     await newAdmin.save();
+
     res.status(201).json({ message: "Admin créé avec succès" });
   } catch (error) {
     res.status(500).json({
@@ -35,7 +40,7 @@ router.post("/register", async (req, res) => {
 
 /* POST admin login */
 router.post("/login", async (req, res) => {
-  if (!checkBody(req.body, ["email", "password"])) {
+  if (!checkBody(req.body, ["username", "password"])) {
     res.json({
       result: false,
       error: "Veuillez remplir l'ensemble des champs",
@@ -44,7 +49,7 @@ router.post("/login", async (req, res) => {
   }
 
   try {
-    const existingAdmin = await Admin.findOne({ isAdmin: true });
+    const existingAdmin = await Admin.findOne({ username: req.body.username });
     if (!existingAdmin) {
       return res.status(400).json({ message: "Problème lors de la connexion" });
     }

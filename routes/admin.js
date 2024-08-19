@@ -33,4 +33,43 @@ router.post("/register", async (req, res) => {
   }
 });
 
+/* POST admin login */
+router.post("/login", async (req, res) => {
+  if (!checkBody(req.body, ["email", "password"])) {
+    res.json({
+      result: false,
+      error: "Veuillez remplir l'ensemble des champs",
+    });
+    return;
+  }
+
+  try {
+    const existingAdmin = await Admin.findOne({ isAdmin: true });
+    if (!existingAdmin) {
+      return res.status(400).json({ message: "Problème lors de la connexion" });
+    }
+
+    if (
+      existingAdmin &&
+      bcrypt.compareSync(req.body.password, existingAdmin.password)
+    ) {
+      res.json({
+        result: true,
+        token: existingAdmin.token,
+        username: existingAdmin.username,
+      });
+    } else {
+      res.json({ result: false, error: "Problème lors de la connexion" });
+    }
+  } catch (error) {
+    if (error instanceof UnauthorizedException) {
+      throw new UnauthorizedException(error.message);
+    } else if (error instanceof InternalServerErrorException) {
+      throw new InternalServerErrorException(error.message);
+    } else if (error instanceof NotFoundException) {
+      throw new NotFoundException(error.message);
+    }
+  }
+});
+
 module.exports = router;

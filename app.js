@@ -8,6 +8,8 @@ var logger = require("morgan");
 
 var indexRouter = require("./routes/index");
 var adminRouter = require("./routes/admin");
+var gamesRouter = require("./routes/games");
+
 var app = express();
 
 const cors = require("cors"); // Installation de Cors
@@ -36,5 +38,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/admin", adminRouter);
+app.use("/games", gamesRouter);
 
 module.exports = app;

@@ -163,11 +163,29 @@ router.get("/dbgames", async (req, res) => {
       "Erreur lors de la récupération des jeux depuis la BDD : ",
       error
     );
-    res
-      .status(500)
-      .json({
-        message: "Une erreur est survenue lors de la récupération des jeux.",
-      });
+    res.status(500).json({
+      message: "Une erreur est survenue lors de la récupération des jeux.",
+    });
+  }
+});
+
+//-------- Route get games from DB by keyword
+router.get("/searchdbgames", async (req, res) => {
+  try {
+    const { search } = req.query;
+
+    const searchQuery = search
+      ? { title: { $regex: search, $options: "i" } } // 'i' pour insensible à la casse
+      : {};
+
+    const games = await Game.find(searchQuery).sort({ createdAt: -1 });
+
+    res.status(200).json(games);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des jeux :", error);
+    res.status(500).json({
+      message: "Une erreur est survenue lors de la récupération des jeux",
+    });
   }
 });
 

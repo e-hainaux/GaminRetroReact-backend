@@ -10,6 +10,7 @@ const gameSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    complete: String,
     image: String,
   },
   { timestamps: true }

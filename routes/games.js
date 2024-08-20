@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const fetch = require("node-fetch");
-const Game = require("../models/game");
+const cloudinary = require("cloudinary").v2;
+const Game = require("../models/games");
 
 // IGDB API platform codes
 const platformMap = {

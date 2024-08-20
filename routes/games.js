@@ -96,7 +96,7 @@ router.get("/apisearch", async (req, res) => {
   }
 });
 
-//-------- Route add games in BDD
+//-------- Route add games in DB
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -117,7 +117,6 @@ router.post("/addgames", async (req, res) => {
     for (const gameData of gamesToAdd) {
       const { title, platform, image, complete, country } = gameData;
 
-      // Télécharger l'image sur Cloudinary
       let cloudinaryResult;
       try {
         cloudinaryResult = await cloudinary.uploader.upload(image, {
@@ -129,7 +128,6 @@ router.post("/addgames", async (req, res) => {
         continue;
       }
 
-      // Créer une nouvelle entrée de jeu
       const newGame = new Game({
         title,
         platform,
@@ -138,7 +136,6 @@ router.post("/addgames", async (req, res) => {
         image: cloudinaryResult.secure_url,
       });
 
-      // Sauvegarder le jeu dans la base de données
       await newGame.save();
       addedGames.push(newGame);
     }
@@ -152,6 +149,25 @@ router.post("/addgames", async (req, res) => {
     res
       .status(500)
       .json({ message: "Une erreur est survenue lors de l'ajout des jeux" });
+  }
+});
+
+//-------- Route get games from DB
+router.get("/dbgames", async (req, res) => {
+  try {
+    const games = await Game.find().sort({ createdAt: -1 });
+
+    res.status(200).json(games);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des jeux depuis la BDD : ",
+      error
+    );
+    res
+      .status(500)
+      .json({
+        message: "Une erreur est survenue lors de la récupération des jeux.",
+      });
   }
 });
 

@@ -242,4 +242,52 @@ router.put("/updategames", async (req, res) => {
   }
 });
 
+//-------- Route delete games from DB and cloud by id
+
+router.delete("/deletegames", async (req, res) => {
+  try {
+    const { gameIds } = req.body;
+
+    if (!gameIds || !Array.isArray(gameIds) || gameIds.length === 0) {
+      return res.status(400).json({ message: "Liste d'IDs de jeux invalide" });
+    }
+
+    const deletedGames = [];
+    const errors = [];
+
+    for (const id of gameIds) {
+      try {
+        const game = await Game.findById(id);
+
+        if (!game) {
+          errors.push({ id, message: "Jeu non trouvé" });
+          continue;
+        }
+
+        const cloudinaryImageId = game.image.split("/").pop().split(".")[0];
+
+        await cloudinary.uploader.destroy(cloudinaryImageId);
+
+        await Game.findByIdAndDelete(id);
+
+        deletedGames.push(id);
+      } catch (error) {
+        console.error(`Erreur lors de la suppression du jeu ${id}:`, error);
+        errors.push({ id, message: "Erreur lors de la suppression" });
+      }
+    }
+
+    res.status(200).json({
+      message: `${deletedGames.length} jeu(x) supprimé(s) avec succès`,
+      deletedGames,
+      errors,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la suppression des jeux :", error);
+    res.status(500).json({
+      message: "Une erreur est survenue lors de la suppression des jeux",
+    });
+  }
+});
+
 module.exports = router;

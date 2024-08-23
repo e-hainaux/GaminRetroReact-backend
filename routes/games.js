@@ -189,4 +189,57 @@ router.get("/searchdbgames", async (req, res) => {
   }
 });
 
+//-------- Route update games from DB by keyword
+router.put("/updategames", async (req, res) => {
+  try {
+    const { gamesToUpdate } = req.body;
+
+    if (
+      !gamesToUpdate ||
+      !Array.isArray(gamesToUpdate) ||
+      gamesToUpdate.length === 0
+    ) {
+      return res.status(400).json({ message: "Liste de jeux invalide" });
+    }
+
+    const updatedGames = [];
+
+    for (const gameData of gamesToUpdate) {
+      const { id, complete, country } = gameData;
+
+      if (!id) {
+        return res.status(400).json({ message: "ID du jeu requis" });
+      }
+
+      if (typeof complete !== "string" && typeof country !== "string") {
+        return res.status(400).json({ message: "Paramètres invalides" });
+      }
+
+      const updatedGame = await Game.findByIdAndUpdate(
+        id,
+        { complete, country },
+        { new: true, runValidators: true }
+      );
+
+      if (!updatedGame) {
+        return res
+          .status(404)
+          .json({ message: `Jeu avec l'ID ${id} non trouvé` });
+      }
+
+      updatedGames.push(updatedGame);
+    }
+
+    res.status(200).json({
+      message: `${updatedGames.length} jeux mis à jour avec succès`,
+      updatedGames,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des jeux :", error);
+    res.status(500).json({
+      message: "Une erreur est survenue lors de la mise à jour des jeux",
+    });
+  }
+});
+
 module.exports = router;

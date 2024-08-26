@@ -152,6 +152,21 @@ router.post("/addgames", async (req, res) => {
   }
 });
 
+//-------- Route get 4 more recent games
+router.get("/recentgames", async (req, res) => {
+  try {
+    const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);
+
+    res.status(200).json(recentGames);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des jeux récents : ", error);
+    res.status(500).json({
+      message:
+        "Une erreur est survenue lors de la récupération des jeux récents.",
+    });
+  }
+});
+
 //-------- Route get games from DB
 router.get("/dbgames", async (req, res) => {
   try {

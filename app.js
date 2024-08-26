@@ -32,7 +32,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"],
 };
 
-app.use(cors(corsOptions)); // Installation de Cors
+app.use(cors("*", corsOptions)); // Installation de Cors
 
 app.use(logger("dev"));
 app.use(express.json());

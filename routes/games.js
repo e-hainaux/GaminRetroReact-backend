@@ -153,7 +153,7 @@ router.post("/addgames", async (req, res) => {
 });
 
 //-------- Route get 4 more recent games
-router.get("/recentgames", async (req, res) => {
+router.get("/recentgames", cors(corsOptions), async (req, res) => {
   try {
     const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);
 

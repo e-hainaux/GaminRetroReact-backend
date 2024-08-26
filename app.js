@@ -1,6 +1,7 @@
 var express = require("express");
 require("dotenv").config();
 require("./models/connection");
+const cors = require("cors"); // Installation de Cors
 
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -11,8 +12,6 @@ var adminRouter = require("./routes/admin");
 var gamesRouter = require("./routes/games");
 
 var app = express();
-
-const cors = require("cors"); // Installation de Cors
 
 const corsOptions = {
   origin: function (origin, callback) {

@@ -31,6 +31,7 @@ const corsOptions = {
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
+  exposedHeaders: ["Access-Control-Allow-Origin"],
 };
 
 app.use(cors(corsOptions)); // Installation de Cors

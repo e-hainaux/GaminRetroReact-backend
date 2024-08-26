@@ -30,9 +30,12 @@ const corsOptions = {
   },
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
-app.use(cors("*", corsOptions)); // Installation de Cors
+app.use(cors(corsOptions)); // Installation de Cors
+
+app.options("*", cors(corsOptions));
 
 app.use(logger("dev"));
 app.use(express.json());

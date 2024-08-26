@@ -22,6 +22,7 @@ const corsOptions = {
       "http://localhost:3001",
       "https://gaminretro-react-backend.vercel.app",
       "https://gaminretroreact-frontend.vercel.app",
+      "https://gaminretro-react-backend.vercel.app/games/recentgames",
     ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);

@@ -20,7 +20,7 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://gamin-retro-react-backend.vercel.app/",
+      "https://gaminretroreact-backend.vercel.app/",
       "https://gaminretroreact-frontend.vercel.app/",
     ];
     if (allowedOrigins.includes(origin) || !origin) {

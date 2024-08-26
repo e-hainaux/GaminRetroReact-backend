@@ -16,7 +16,7 @@ const cors = require("cors"); // Installation de Cors
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Remplacee 'allowedOrigins' avec vos différents URLs front pouvant accéder au Backend
+    console.log("Origine de la requête : ", origin);
     const allowedOrigins = [
       "http://localhost:3000",
       "http://localhost:3001",

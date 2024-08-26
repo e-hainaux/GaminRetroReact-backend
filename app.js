@@ -17,10 +17,10 @@ const corsOptions = {
   origin: function (origin, callback) {
     console.log("Origine de la requête : ", origin);
     const allowedOrigins = [
+      "https://gaminretroreact-frontend.vercel.app",
+      "https://gaminretroreact-backend.vercel.app",
       "http://localhost:3000",
       "http://localhost:3001",
-      "https://gaminretroreact-backend.vercel.app",
-      "https://gaminretroreact-frontend.vercel.app",
     ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);

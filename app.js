@@ -17,7 +17,12 @@ const cors = require("cors"); // Installation de Cors
 const corsOptions = {
   origin: function (origin, callback) {
     // Remplacee 'allowedOrigins' avec vos différents URLs front pouvant accéder au Backend
-    const allowedOrigins = ["http://localhost:3000", "http://localhost:3001"];
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "https://gaminretro-react-backend.vercel.app",
+      "https://gaminretroreact-frontend.vercel.app",
+    ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {

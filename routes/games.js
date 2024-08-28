@@ -34,6 +34,11 @@ async function getAccessToken() {
   return data.access_token;
 }
 
+/* GET test auth */
+router.get("/", function (req, res, next) {
+  res.send("respond with a resource");
+});
+
 //-------- Route search one game in API
 router.get("/apisearch", async (req, res) => {
   try {

@@ -155,12 +155,12 @@ router.post("/addgames", async (req, res) => {
 //-------- Route get 4 more recent games
 router.get("/recentgames", async (req, res) => {
   console.log("Début de la requête /recentgames");
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://gaminretroreact-frontend.vercel.app"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  // res.header(
+  //   "Access-Control-Allow-Origin",
+  //   "https://gaminretroreact-frontend.vercel.app"
+  // );
+  // res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  // res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   try {
     console.log("Tentative de récupération des jeux récents...");
     const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);

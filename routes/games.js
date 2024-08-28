@@ -164,9 +164,9 @@ router.get("/recentgames", async (req, res) => {
     "Access-Control-Allow-Origin",
     "https://gaminretroreact-frontend.vercel.app/"
   );
-  // res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  // res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  // res.send("respond with a resource");
+  res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.send("respond with a resource");
 
   try {
     console.log("Tentative de récupération des jeux récents...");

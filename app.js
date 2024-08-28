@@ -47,7 +47,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions)); // Installation de Cors
 
-// app.options("*", cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(logger("dev"));
 app.use(express.json());

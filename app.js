@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: "https://gaminretroreact-frontend.vercel.app/", // Votre domaine frontend
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Origin", "Content-Type", "Authorization"],
   })
 );
 

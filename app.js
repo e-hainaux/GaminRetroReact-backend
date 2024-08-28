@@ -16,27 +16,38 @@ var app = express();
 const cors = require("cors"); // Installation de Cors
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    console.log("Origine de la requête : ", origin);
-    const allowedOrigins = [
-      "https://gaminretroreact-frontend.vercel.app",
-      "https://gaminretroreact-backend.vercel.app",
-      "http://localhost:3000",
-      "http://localhost:3001",
-    ];
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: [
+    "https://gaminretroreact-frontend.vercel.app",
+    "https://gaminretroreact-backend.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:3001",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
 };
+
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     console.log("Origine de la requête : ", origin);
+//     const allowedOrigins = [
+//       "https://gaminretroreact-frontend.vercel.app",
+//       "https://gaminretroreact-backend.vercel.app",
+//       "http://localhost:3000",
+//       "http://localhost:3001",
+//     ];
+//     if (allowedOrigins.includes(origin) || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+// };
 
 app.use(cors(corsOptions)); // Installation de Cors
 
-app.options("*", cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use(logger("dev"));
 app.use(express.json());

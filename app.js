@@ -14,13 +14,13 @@ var gamesRouter = require("./routes/games");
 
 var app = express();
 
-app.use(
-  cors({
-    origin: "https://gaminretroreact-frontend.vercel.app/", // Votre domaine frontend
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Origin", "Content-Type", "Authorization"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: "https://gaminretroreact-frontend.vercel.app/", // Votre domaine frontend
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Origin", "Content-Type", "Authorization"],
+//   })
+// );
 
 // const corsOptions = {
 //   origin: [
@@ -32,26 +32,26 @@ app.use(
 //   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
 // };
 
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     console.log("Origine de la requête : ", origin);
-//     const allowedOrigins = [
-//       "https://gaminretroreact-frontend.vercel.app",
-//       "https://gaminretroreact-backend.vercel.app",
-//       "http://localhost:3000",
-//       "http://localhost:3001",
-//     ];
-//     if (allowedOrigins.includes(origin) || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-// };
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log("Origine de la requête : ", origin);
+    const allowedOrigins = [
+      "https://gaminretroreact-frontend.vercel.app",
+      "https://gaminretroreact-backend.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:3001",
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+};
 
-// app.use(cors(corsOptions)); // Installation de Cors
+app.use(cors(corsOptions)); // Installation de Cors
 
 app.options("*", cors(corsOptions));
 

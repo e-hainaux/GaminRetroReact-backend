@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
 const Game = require("../models/games");
 

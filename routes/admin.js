@@ -1,5 +1,6 @@
 var express = require("express");
-var router = express.Router();
+const router = express.Router();
+
 const { checkBody } = require("../modules/bodyCheck");
 const Admin = require("../models/admin");
 

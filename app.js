@@ -1,7 +1,7 @@
 var express = require("express");
 require("dotenv").config();
+
 require("./models/connection");
-const cors = require("cors"); // Installation de Cors
 
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -12,6 +12,8 @@ var adminRouter = require("./routes/admin");
 var gamesRouter = require("./routes/games");
 
 var app = express();
+
+const cors = require("cors"); // Installation de Cors
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -30,13 +32,11 @@ const corsOptions = {
   },
   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
-  exposedHeaders: ["Access-Control-Allow-Origin"],
 };
 
 app.use(cors(corsOptions)); // Installation de Cors
 
-app.options("*", cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -44,19 +44,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://gaminretroreact-frontend.vercel.app"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", true);
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header(
+//     "Access-Control-Allow-Origin",
+//     "https://gaminretroreact-frontend.vercel.app"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+//   );
+//   res.header("Access-Control-Allow-Credentials", true);
+//   next();
+// });
 
 app.use("/", indexRouter);
 app.use("/admin", adminRouter);

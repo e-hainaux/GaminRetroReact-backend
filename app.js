@@ -14,15 +14,23 @@ var gamesRouter = require("./routes/games");
 
 var app = express();
 
-const corsOptions = {
-  origin: [
-    "https://gaminretroreact-frontend.vercel.app",
-    "http://localhost:3000",
-    "http://localhost:3001",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
-};
+app.use(
+  cors({
+    origin: "https://gaminretroreact-frontend.vercel.app", // Votre domaine frontend
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
+// const corsOptions = {
+//   origin: [
+//     "https://gaminretroreact-frontend.vercel.app",
+//     "http://localhost:3000",
+//     "http://localhost:3001",
+//   ],
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+// };
 
 // const corsOptions = {
 //   origin: function (origin, callback) {
@@ -43,7 +51,7 @@ const corsOptions = {
 //   methods: ["GET", "POST", "PUT", "DELETE"],
 // };
 
-app.use(cors(corsOptions)); // Installation de Cors
+// app.use(cors(corsOptions)); // Installation de Cors
 
 app.options("*", cors(corsOptions));
 

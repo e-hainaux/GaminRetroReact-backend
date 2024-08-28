@@ -34,7 +34,7 @@ async function getAccessToken() {
   return data.access_token;
 }
 
-/* GET test auth */
+/* GET test games */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
 });
@@ -166,18 +166,20 @@ router.get("/recentgames", async (req, res) => {
   // );
   // res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
   // res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  try {
-    console.log("Tentative de récupération des jeux récents...");
-    const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);
-    console.log("Jeux récents récupérés avec succès :", recentGames);
-    res.status(200).json(recentGames);
-  } catch (error) {
-    console.error("Erreur lors de la récupération des jeux récents : ", error);
-    res.status(500).json({
-      message:
-        "Une erreur est survenue lors de la récupération des jeux récents.",
-    });
-  }
+  res.send("respond with a resource");
+
+  // try {
+  //   console.log("Tentative de récupération des jeux récents...");
+  //   const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);
+  //   console.log("Jeux récents récupérés avec succès :", recentGames);
+  //   res.status(200).json(recentGames);
+  // } catch (error) {
+  //   console.error("Erreur lors de la récupération des jeux récents : ", error);
+  //   res.status(500).json({
+  //     message:
+  //       "Une erreur est survenue lors de la récupération des jeux récents.",
+  //   });
+  // }
 });
 
 //-------- Route get games from DB

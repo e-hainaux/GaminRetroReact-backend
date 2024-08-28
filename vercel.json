@@ -1,11 +1,11 @@
 {
   "version": 2,
-
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "app.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "rewrites": [{ "source": "/(.*)", "destination": "app.js" }],
   "headers": [
     {

@@ -166,7 +166,7 @@ router.get("/recentgames", async (req, res) => {
   );
   res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.send("respond with a resource");
+  // res.send("respond with a resource");
 
   try {
     console.log("Tentative de récupération des jeux récents...");

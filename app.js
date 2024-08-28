@@ -1,4 +1,5 @@
 var express = require("express");
+const cors = require("cors"); // Installation de Cors
 require("dotenv").config();
 
 require("./models/connection");
@@ -13,12 +14,9 @@ var gamesRouter = require("./routes/games");
 
 var app = express();
 
-const cors = require("cors"); // Installation de Cors
-
 const corsOptions = {
   origin: [
     "https://gaminretroreact-frontend.vercel.app",
-    "https://gaminretroreact-backend.vercel.app",
     "http://localhost:3000",
     "http://localhost:3001",
   ],

@@ -16,7 +16,10 @@ var app = express();
 
 app.use(
   cors({
-    origin: "https://gaminretroreact-frontend.vercel.app", // Votre domaine frontend
+    origin: [
+      "https://gaminretroreact-frontend.vercel.app",
+      "http://localhost:3001",
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Origin", "Content-Type", "Authorization"],
   })

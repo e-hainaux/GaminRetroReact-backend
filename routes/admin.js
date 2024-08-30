@@ -15,7 +15,7 @@ router.get("/", function (req, res, next) {
 /* POST register admin - use ONCE */
 router.post("/register", async (req, res) => {
   try {
-    const existingAdmin = await Admin.findOne({ isAdmin: true });
+    const existingAdmin = await Admin.findOne({ username: req.body.username });
     if (existingAdmin) {
       return res.status(400).json({ message: "Un admin existe déjà" });
     }

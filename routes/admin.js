@@ -7,6 +7,9 @@ const Admin = require("../models/admin");
 const bcrypt = require("bcrypt");
 const uid2 = require("uid2");
 
+const jwt = require("jsonwebtoken");
+const SECRET_KEY = process.env.JWT_SECRET_KEY;
+
 /* GET test auth */
 router.get("/", function (req, res, next) {
   res.send("respond with a resource");
@@ -21,10 +24,17 @@ router.post("/register", async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    const token = jwt.sign(
+      { username: req.body.username, role: "admin" },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
     const newAdmin = new Admin({
       username: req.body.username,
       password: hashedPassword,
-      token: uid2(32),
+      token: token,
       isAdmin: true,
     });
 
@@ -42,7 +52,7 @@ router.post("/register", async (req, res) => {
 /* POST admin login */
 router.post("/login", async (req, res) => {
   if (!checkBody(req.body, ["username", "password"])) {
-    res.json({
+    return res.status(400).json({
       result: false,
       error: "Veuillez remplir l'ensemble des champs",
     });
@@ -55,18 +65,27 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Problème lors de la connexion" });
     }
 
-    if (
-      existingAdmin &&
-      bcrypt.compareSync(req.body.password, existingAdmin.password)
-    ) {
-      res.json({
-        result: true,
-        token: existingAdmin.token,
-        username: existingAdmin.username,
-      });
-    } else {
-      res.json({ result: false, error: "Problème lors de la connexion" });
+    const isPasswordValid = await bcrypt.compare(
+      req.body.password,
+      existingAdmin.password
+    );
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ result: false, error: "Problème lors de la connexion" });
     }
+
+    const token = jwt.sign(
+      { username: existingAdmin.username, role: "admin" },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.json({
+      result: true,
+      token: token,
+      username: existingAdmin.username,
+    });
   } catch (error) {
     if (error instanceof UnauthorizedException) {
       throw new UnauthorizedException(error.message);

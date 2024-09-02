@@ -5,19 +5,19 @@ const cloudinary = require("cloudinary").v2;
 const Game = require("../models/games");
 
 // IGDB API platform codes
-// const platformMap = {
-//   "Master System": 64,
-//   "Mega Drive": 29,
-//   Dreamcast: 23,
-//   "Game Gear": 35,
-//   NES: 18,
-//   SNES: 19,
-//   "Game Boy": 33,
-//   "GB color": 22,
-//   "GB advance": 24,
-//   Playstation: 7,
-//   Lynx: 61,
-// };
+const platformMap = {
+  64: "Master System",
+  29: "Mega Drive",
+  23: "Dreamcast",
+  35: "Game Gear",
+  18: "NES",
+  19: "SNES",
+  33: "Game Boy",
+  22: "GB color",
+  24: "GB advance",
+  7: "Playstation",
+  61: "Lynx",
+};
 
 // IGDB API
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -88,15 +88,14 @@ router.get("/apisearch", async (req, res) => {
     }
 
     const games = await response.json();
+    const platformName = await platformMap[platform];
 
     // Transform data for BDD model 'games'
     const transformedGames = games.map((game) => ({
       title: game.name,
-      platform: game.platforms
-        ? game.platforms.map((p) => p.name).join(", ")
-        : "Unknown",
+      platform: platformName,
       image: game.cover
-        ? `https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`
+        ? `https:${game.cover.url.replace("t_thumb", "t_cover_big")}`
         : null,
     }));
 

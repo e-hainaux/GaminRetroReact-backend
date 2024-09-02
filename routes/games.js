@@ -5,19 +5,19 @@ const cloudinary = require("cloudinary").v2;
 const Game = require("../models/games");
 
 // IGDB API platform codes
-const platformMap = {
-  "Master System": 64,
-  "Mega Drive": 29,
-  Dreamcast: 23,
-  "Game Gear": 35,
-  NES: 18,
-  SNES: 19,
-  "Game Boy": 33,
-  "GB color": 22,
-  "GB advance": 24,
-  Playstation: 7,
-  Lynx: 61,
-};
+// const platformMap = {
+//   "Master System": 64,
+//   "Mega Drive": 29,
+//   Dreamcast: 23,
+//   "Game Gear": 35,
+//   NES: 18,
+//   SNES: 19,
+//   "Game Boy": 33,
+//   "GB color": 22,
+//   "GB advance": 24,
+//   Playstation: 7,
+//   Lynx: 61,
+// };
 
 // IGDB API
 const CLIENT_ID = process.env.CLIENT_ID;
@@ -43,6 +43,7 @@ router.get("/", function (req, res, next) {
 router.get("/apisearch", async (req, res) => {
   try {
     const { title, platform } = req.query;
+    console.log("B QUERY title & platform : ", title, platform);
 
     if (!title || !platform) {
       return res
@@ -50,27 +51,34 @@ router.get("/apisearch", async (req, res) => {
         .json({ message: "Le titre du jeu et la plateforme sont requis" });
     }
 
-    if (!platformMap[platform]) {
-      return res.status(400).json({ message: "Plateforme non reconnue" });
+    if (!platform) {
+      return res
+        .status(400)
+        .json({ message: "Plateforme non reconnue", platform });
     }
 
     const accessToken = await getAccessToken();
 
-    let query = `search "${title}"; where version_parent = null`;
+    let query = `
+      fields name, platforms.name, cover.url;
+      search "${title}";
+      where version_parent = null`;
 
-    if (platform && platformMap[platform]) {
-      query += ` & platforms = (${platformMap[platform]})`;
+    if (platform) {
+      query += ` & platforms = (${platform})`;
     }
 
-    query += `; fields name, platforms.name, cover.url; limit 50;`;
+    query += `;
+  limit 50;
+`;
 
     const response = await fetch("https://api.igdb.com/v4/games", {
       method: "POST",
       headers: {
-        "Client-ID": process.env.IGDB_CLIENT_ID,
+        "Client-ID": process.env.CLIENT_ID,
         Authorization: `Bearer ${accessToken}`,
         Accept: "application/json",
-        "Content-Type": "application/json",
+        "Content-Type": "text/plain",
       },
       body: query,
     });

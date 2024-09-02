@@ -62,7 +62,7 @@ router.get("/apisearch", async (req, res) => {
     let query = `
       fields name, platforms.name, cover.url;
       search "${title}";
-      where version_parent = null`;
+      where version_parent = null & category = 0`;
 
     if (platform) {
       query += ` & platforms = (${platform})`;

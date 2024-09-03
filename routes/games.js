@@ -51,25 +51,21 @@ router.get("/apisearch", async (req, res) => {
         .json({ message: "Le titre du jeu et la plateforme sont requis" });
     }
 
-    if (!platform) {
-      return res
-        .status(400)
-        .json({ message: "Plateforme non reconnue", platform });
-    }
-
     const accessToken = await getAccessToken();
 
+    const excludedCategories = [5, 8, 9, 12, 15];
+
     let query = `
-      fields name, platforms.name, cover.url;
-      search "${title}";
-      where version_parent = null & category = 0`;
+    fields name, platforms.name, cover.url, category, parent_game;
+    search "${title}";
+    where category != (${excludedCategories.join(", ")})`;
 
     if (platform) {
       query += ` & platforms = (${platform})`;
     }
 
     query += `;
-  limit 50;
+limit 50;
 `;
 
     const response = await fetch("https://api.igdb.com/v4/games", {

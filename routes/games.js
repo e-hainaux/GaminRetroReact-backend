@@ -23,6 +23,9 @@ const platformMap = {
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
+const DEFAULT_IMAGE_URL =
+  "https://images.igdb.com/igdb/image/upload/t_cover_big/nocover.webp";
+
 async function getAccessToken() {
   const response = await fetch(
     `https://id.twitch.tv/oauth2/token?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&grant_type=client_credentials`,
@@ -33,6 +36,23 @@ async function getAccessToken() {
   const data = await response.json();
   return data.access_token;
 }
+
+const findCoverImage = (game, allGames, depth = 0) => {
+  if (depth > 5) return null;
+
+  if (game.cover && game.cover.url) {
+    return `https:${game.cover.url.replace("t_thumb", "t_cover_big")}`;
+  }
+
+  if (game.parent_game) {
+    const parentGame = allGames.find((g) => g.id === game.parent_game);
+    if (parentGame) {
+      return findCoverImage(parentGame, allGames, depth + 1);
+    }
+  }
+
+  return null;
+};
 
 /* GET test games */
 router.get("/", function (req, res, next) {
@@ -65,8 +85,8 @@ router.get("/apisearch", async (req, res) => {
     }
 
     query += `;
-limit 50;
-`;
+    limit 50;
+    `;
 
     const response = await fetch("https://api.igdb.com/v4/games", {
       method: "POST",
@@ -80,19 +100,24 @@ limit 50;
     });
 
     if (!response.ok) {
-      throw new Error(`IGDB API responded with status ${response.status}`);
+      const errorText = await response.text();
+      console.error(
+        `IGDB API Error: ${response.status} ${response.statusText}`,
+        errorText
+      );
+      throw new Error(
+        `IGDB API responded with status ${response.status}: ${errorText}`
+      );
     }
 
     const games = await response.json();
-    const platformName = await platformMap[platform];
+    const platformName = platformMap[platform];
 
     // Transform data for BDD model 'games'
     const transformedGames = games.map((game) => ({
       title: game.name,
       platform: platformName,
-      image: game.cover
-        ? `https:${game.cover.url.replace("t_thumb", "t_cover_big")}`
-        : null,
+      image: findCoverImage(game, games) || DEFAULT_IMAGE_URL,
     }));
 
     res.json(transformedGames);
@@ -100,6 +125,7 @@ limit 50;
     console.error("Error:", error);
     res.status(500).json({
       message: "Une erreur est survenue lors de la recherche des jeux",
+      error: error.message,
     });
   }
 });

@@ -188,22 +188,13 @@ router.post("/addgames", async (req, res) => {
 
 //-------- Route get 4 more recent games
 router.get("/recentgames", async (req, res) => {
-  console.log("Début de la requête /recentgames");
-  // res.header(
-  //   "Access-Control-Allow-Origin",
-  //   "https://gaminretroreact-frontend.vercel.app"
-  // );
-  // res.header("Access-Control-Allow-Methods", "GET, OPTIONS");
-  // res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  // res.send("respond with a resource");
+  console.log("Lancement route RECENT");
 
   try {
-    console.log("Tentative de récupération des jeux récents...");
     const recentGames = await Game.find().sort({ createdAt: -1 }).limit(4);
-    console.log("Jeux récents récupérés avec succès :", recentGames);
+
     res.status(200).json(recentGames);
   } catch (error) {
-    console.error("Erreur lors de la récupération des jeux récents : ", error);
     res.status(500).json({
       message:
         "Une erreur est survenue lors de la récupération des jeux récents.",
@@ -234,7 +225,7 @@ router.get("/searchdbgames", async (req, res) => {
     const { search } = req.query;
 
     const searchQuery = search
-      ? { title: { $regex: search, $options: "i" } } // 'i' pour insensible à la casse
+      ? { title: { $regex: search, $options: "i" } }
       : {};
 
     const games = await Game.find(searchQuery).sort({ createdAt: -1 });
@@ -242,6 +233,27 @@ router.get("/searchdbgames", async (req, res) => {
     res.status(200).json(games);
   } catch (error) {
     console.error("Erreur lors de la récupération des jeux :", error);
+    res.status(500).json({
+      message: "Une erreur est survenue lors de la récupération des jeux",
+    });
+  }
+});
+
+//-------- Route update games from DB by platform name
+router.get("/searchdbgamesbyplatform", async (req, res) => {
+  console.log("Lancement route PlATFORM");
+
+  try {
+    console.log("Lancement route platform");
+
+    const games = await Game.find({ platform: "Lynx" }).sort({
+      title: 1,
+    });
+    console.log("Nombre de jeux trouvés en back : ", games.length);
+    console.log("games : ", games);
+
+    res.status(200).json(games);
+  } catch (error) {
     res.status(500).json({
       message: "Une erreur est survenue lors de la récupération des jeux",
     });

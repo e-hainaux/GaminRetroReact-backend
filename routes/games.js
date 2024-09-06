@@ -241,17 +241,18 @@ router.get("/searchdbgames", async (req, res) => {
 
 //-------- Route update games from DB by platform name
 router.get("/searchdbgamesbyplatform", async (req, res) => {
-  console.log("Lancement route PlATFORM");
+  console.log("Lancement route PLATFORM");
+
+  const { platform } = req.query;
 
   try {
-    console.log("Lancement route platform");
+    console.log(`Recherche des jeux pour la plateforme : ${platform}`);
 
-    const games = await Game.find({ platform: "Lynx" }).sort({
+    const games = await Game.find({ platform }).sort({
       title: 1,
     });
-    console.log("Nombre de jeux trouvés en back : ", games.length);
-    console.log("games : ", games);
 
+    console.log("Nombre de jeux trouvés en back : ", games.length);
     res.status(200).json(games);
   } catch (error) {
     res.status(500).json({

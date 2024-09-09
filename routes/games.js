@@ -202,11 +202,18 @@ router.get("/recentgames", async (req, res) => {
   }
 });
 
-//-------- Route get games from DB in alphabetical order
+// Route get games from DB in alphabetical order with pagination and total count
 router.get("/dbgames", async (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0; // Ajouter l'offset pour la pagination
   try {
-    const games = await Game.find().sort({ title: 1 });
-    res.status(200).json(games);
+    const totalGames = await Game.countDocuments(); // Nombre total de jeux dans la BDD
+    const games = await Game.find()
+      .sort({ title: 1 })
+      .skip(offset) // Sauter les jeux déjà récupérés
+      .limit(limit); // Limiter les résultats au nombre demandé
+
+    res.status(200).json({ games, totalCount: totalGames });
   } catch (error) {
     console.error("Erreur lors de la récupération des jeux :", error);
     res.status(500).json({

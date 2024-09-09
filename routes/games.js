@@ -202,17 +202,13 @@ router.get("/recentgames", async (req, res) => {
   }
 });
 
-//-------- Route get games from DB
+//-------- Route get games from DB in alphabetical order
 router.get("/dbgames", async (req, res) => {
   try {
-    const games = await Game.find().sort({ createdAt: -1 });
-
+    const games = await Game.find().sort({ title: 1 });
     res.status(200).json(games);
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des jeux depuis la BDD : ",
-      error
-    );
+    console.error("Erreur lors de la récupération des jeux :", error);
     res.status(500).json({
       message: "Une erreur est survenue lors de la récupération des jeux.",
     });
@@ -228,7 +224,7 @@ router.get("/searchdbgames", async (req, res) => {
       ? { title: { $regex: search, $options: "i" } }
       : {};
 
-    const games = await Game.find(searchQuery).sort({ createdAt: -1 });
+    const games = await Game.find(searchQuery).sort({ title: 1 });
 
     res.status(200).json(games);
   } catch (error) {

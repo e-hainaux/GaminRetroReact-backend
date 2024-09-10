@@ -73,7 +73,7 @@ router.get("/apisearch", async (req, res) => {
 
     const accessToken = await getAccessToken();
 
-    const excludedCategories = [5, 8, 9, 12, 15];
+    const excludedCategories = [5, 9, 12, 15];
 
     let query = `
     fields name, platforms.name, cover.url, category, parent_game;
